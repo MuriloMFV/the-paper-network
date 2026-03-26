@@ -2,9 +2,6 @@
    THE INSIGHTS — script.js
    ============================================================ */
 
-// ---------------------------------------------------------------------------
-// Config
-// ---------------------------------------------------------------------------
 const POST_IDS = [
   "social-network",
   "boyhood",
@@ -13,20 +10,26 @@ const POST_IDS = [
   "jogos-tycoon",
 ];
 
+/* ── Temas disponíveis e seus acentos padrão ────────────────── */
+const THEME_ACCENTS = {
+  dark:    { accent: "#c47a3a", accentL: "#e8a870" },
+  sepia:   { accent: "#8b3a0f", accentL: "#c47840" },
+  stark:   { accent: "#c0392b", accentL: "#e74c3c" },
+  mind:    { accent: "#3d6b45", accentL: "#6a9e72" },
+  default: { accent: "#b8440a", accentL: "#e8956d" },
+};
+
 // ---------------------------------------------------------------------------
 // Markdown parser
 // ---------------------------------------------------------------------------
 function parseMarkdown(raw) {
   const DELIMITER = "---";
   const parts = raw.split(DELIMITER);
-
-  let meta = {};
-  let body = raw;
+  let meta = {}, body = raw;
 
   if (parts.length >= 3 && parts[0].trim() === "") {
     const frontmatter = parts[1];
     body = parts.slice(2).join(DELIMITER).trim();
-
     frontmatter.split("\n").forEach(line => {
       const colonIdx = line.indexOf(":");
       if (colonIdx === -1) return;
@@ -35,7 +38,6 @@ function parseMarkdown(raw) {
       if (key) meta[key] = value;
     });
   }
-
   return { meta, body };
 }
 
@@ -48,36 +50,47 @@ function formatDate(dateStr) {
     return new Date(dateStr).toLocaleDateString("pt-BR", {
       day: "numeric", month: "long", year: "numeric",
     });
-  } catch {
-    return dateStr;
-  }
+  } catch { return dateStr; }
 }
 
 function tagsHTML(tagsStr = "") {
-  return tagsStr
-    .split(",")
-    .map(t => t.trim())
-    .filter(Boolean)
-    .map(t => `<span class="tag-pill">${t}</span>`)
-    .join("");
+  return tagsStr.split(",").map(t => t.trim()).filter(Boolean)
+    .map(t => `<span class="tag-pill">${t}</span>`).join("");
 }
 
 // ---------------------------------------------------------------------------
-// Scroll animation — adiciona .visible nos cards ao entrar na viewport
+// Aplica tema ao body — chamado pela loadPostPage
+// ---------------------------------------------------------------------------
+function applyTheme(meta) {
+  const body  = document.body;
+  const theme = (meta.theme || "default").toLowerCase();
+
+  body.setAttribute("data-theme", theme);
+
+  // Cor de acento customizada no frontmatter sobrescreve a do tema
+  const defaults = THEME_ACCENTS[theme] || THEME_ACCENTS.default;
+  const accent  = meta.accent  || defaults.accent;
+  const accentL = meta.accentL || defaults.accentL;
+
+  body.style.setProperty("--post-accent",   accent);
+  body.style.setProperty("--post-accent-l", accentL);
+  body.style.setProperty("--post-drop-cap", accent);
+}
+
+// ---------------------------------------------------------------------------
+// Scroll animations
 // ---------------------------------------------------------------------------
 function initScrollAnimations() {
   const cards = document.querySelectorAll(".card");
   if (!cards.length) return;
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observer.unobserve(entry.target); // dispara só uma vez
-        }
-      });
-    },
+    entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    }),
     { threshold: 0.12 }
   );
 
@@ -85,65 +98,75 @@ function initScrollAnimations() {
 }
 
 // ---------------------------------------------------------------------------
-// Masthead — anima as linhas horizontais ao aparecer na tela
+// Masthead line animation
 // ---------------------------------------------------------------------------
 function initMastheadAnimation() {
   const rules = document.querySelectorAll(".masthead-rule");
   if (!rules.length) return;
 
   const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("animate");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
+    entries => entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("animate");
+        observer.unobserve(entry.target);
+      }
+    }),
     { threshold: 0.5 }
   );
-
   rules.forEach(r => observer.observe(r));
 }
 
 // ---------------------------------------------------------------------------
-// Barra de progresso de leitura (só na post.html)
+// Barra de progresso de leitura
 // ---------------------------------------------------------------------------
 function initReadingProgress() {
-  if (!document.body.classList.contains("post-page")) return;
-
-  const bar = document.createElement("div");
-  bar.className = "reading-progress";
-  document.body.prepend(bar);
+  const bar = document.querySelector(".reading-progress");
+  if (!bar) return;
 
   const content = document.querySelector(".content");
   if (!content) return;
 
   window.addEventListener("scroll", () => {
-    const contentTop    = content.getBoundingClientRect().top + window.scrollY;
-    const contentHeight = content.offsetHeight;
-    const scrolled      = window.scrollY - contentTop;
-    const percent       = Math.min(100, Math.max(0, (scrolled / contentHeight) * 100));
-    bar.style.width     = percent + "%";
+    const top     = content.getBoundingClientRect().top + window.scrollY;
+    const height  = content.offsetHeight;
+    const scrolled = window.scrollY - top;
+    const percent  = Math.min(100, Math.max(0, (scrolled / height) * 100));
+    bar.style.width = percent + "%";
   }, { passive: true });
 }
 
 // ---------------------------------------------------------------------------
-// Cursor magnético nos objetos da colagem (efeito de repulsão/atração leve)
+// Título do post aparece no header ao scrollar (só post.html)
+// ---------------------------------------------------------------------------
+function initHeaderTitle() {
+  const headerTitle = document.getElementById("post-header-title");
+  const postTitle   = document.getElementById("post-title");
+  if (!headerTitle || !postTitle) return;
+
+  const observer = new IntersectionObserver(
+    entries => entries.forEach(entry => {
+      headerTitle.classList.toggle("visible", !entry.isIntersecting);
+    }),
+    { threshold: 0, rootMargin: "-80px 0px 0px 0px" }
+  );
+  observer.observe(postTitle);
+}
+
+// ---------------------------------------------------------------------------
+// Efeito magnético nos objetos da colagem
 // ---------------------------------------------------------------------------
 function initMagneticObjects() {
   const objects = document.querySelectorAll(".hero-wrap .obj");
   if (!objects.length) return;
 
   objects.forEach(obj => {
-    obj.addEventListener("mousemove", (e) => {
+    obj.addEventListener("mousemove", e => {
       const rect   = obj.getBoundingClientRect();
       const cx     = rect.left + rect.width  / 2;
       const cy     = rect.top  + rect.height / 2;
       const dx     = (e.clientX - cx) / rect.width  * 10;
       const dy     = (e.clientY - cy) / rect.height * 10;
       const rotate = parseFloat(obj.style.getPropertyValue("--r") || "0");
-
       obj.style.transform = `translate(${dx}px, ${dy}px) rotate(${rotate}deg) scale(1.06)`;
     });
 
@@ -155,7 +178,7 @@ function initMagneticObjects() {
 }
 
 // ---------------------------------------------------------------------------
-// Index page: carrega posts dinamicamente (se usar #posts-container)
+// Index page: carrega posts dinâmicos (se usar #posts-container)
 // ---------------------------------------------------------------------------
 async function loadPosts() {
   const container = document.getElementById("posts-container");
@@ -170,12 +193,10 @@ async function loadPosts() {
   results.forEach((result, i) => {
     if (result.status !== "fulfilled") return;
     const { id, meta } = result.value;
-
     const card = document.createElement("a");
-    card.href  = `post.html?id=${id}`;
+    card.href = `post.html?id=${id}`;
     card.className = "card grid-card";
     card.style.setProperty("--delay", `${i * 80}ms`);
-
     card.innerHTML = `
       ${meta.image ? `<div class="grid-card-image"><img src="${meta.image}" alt="${meta.title || ""}"></div>` : ""}
       <div class="grid-card-body${meta.image ? "" : " no-image"}">
@@ -185,11 +206,9 @@ async function loadPosts() {
         <small class="card-date">${formatDate(meta.date)}</small>
       </div>
     `;
-
     container.appendChild(card);
   });
 
-  // re-observa os cards recém criados
   initScrollAnimations();
 }
 
@@ -220,9 +239,14 @@ async function loadPostPage() {
 
   const { meta, body } = parseMarkdown(raw);
 
-  document.title = meta.title ? `${meta.title} · The Insights` : "The Insights";
+  // aplica tema ANTES de renderizar conteúdo
+  applyTheme(meta);
 
+  document.title = meta.title ? `${meta.title} · The Insights` : "The Insights";
   titleEl.textContent = meta.title || "";
+
+  const headerTitleEl = document.getElementById("post-header-title");
+  if (headerTitleEl) headerTitleEl.textContent = meta.title || "";
 
   const descEl = document.getElementById("post-desc");
   if (descEl) descEl.textContent = meta.description || "";
@@ -252,6 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollAnimations();
   initMastheadAnimation();
   initReadingProgress();
+  initHeaderTitle();
   initMagneticObjects();
   loadPosts();
   loadPostPage();

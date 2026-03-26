@@ -29,6 +29,17 @@
 
   --max-w:        1120px;
   --reading-w:    680px;
+
+  /* tokens de tema do post — sobrescritos por data-theme */
+  --post-bg:        #f7f3ec;
+  --post-ink:       #1a1714;
+  --post-ink-soft:  #3d3830;
+  --post-ink-muted: #7a7268;
+  --post-accent:    #b8440a;
+  --post-accent-l:  #e8956d;
+  --post-rule:      #e2dbd0;
+  --post-header-bg: rgba(247,243,236,0.92);
+  --post-drop-cap:  #b8440a;
 }
 
 html { scroll-behavior: smooth; }
@@ -50,7 +61,6 @@ a { text-decoration: none; color: inherit; }
    KEYFRAMES
    ============================================================ */
 
-/* Hero: objetos entram jogados, cada um com trajetória própria */
 @keyframes toss-in-left {
   from { opacity: 0; transform: translateX(-60px) rotate(var(--r, -8deg)) scale(0.85); }
   to   { opacity: 1; transform: translateX(0)     rotate(var(--r, -8deg)) scale(1); }
@@ -61,53 +71,36 @@ a { text-decoration: none; color: inherit; }
   to   { opacity: 1; transform: translateX(0)    rotate(var(--r, 6deg)) scale(1); }
 }
 
-@keyframes drop-in {
-  from { opacity: 0; transform: translateY(-40px) rotate(var(--r, 0deg)); }
-  to   { opacity: 1; transform: translateY(0)     rotate(var(--r, 0deg)); }
-}
-
-/* Título hero: revela letra por letra via clip */
 @keyframes title-reveal {
   from { clip-path: inset(0 100% 0 0); opacity: 0; }
   to   { clip-path: inset(0 0%   0 0); opacity: 1; }
 }
 
-/* Tagline: sobe suavemente */
 @keyframes rise {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* CTA seta: pulsa para baixo */
 @keyframes pulse-down {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50%       { transform: translateX(-50%) translateY(8px); }
 }
 
-/* Masthead: desliza da esquerda */
-@keyframes slide-in {
-  from { opacity: 0; transform: translateX(-30px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-/* Cards: entram com leve rotação corrigida (scroll-driven via JS) */
-@keyframes card-enter {
-  from { opacity: 0; transform: translateY(32px) rotate(var(--card-r, -0.6deg)); }
-  to   { opacity: 1; transform: translateY(0)    rotate(var(--card-r, -0.6deg)); }
-}
-
-/* Linha decorativa que cresce */
 @keyframes line-grow {
   from { transform: scaleX(0); transform-origin: left; }
   to   { transform: scaleX(1); transform-origin: left; }
 }
 
-/* Sticker bounce na entrada */
 @keyframes sticker-land {
   0%   { opacity: 0; transform: rotate(-6deg) scale(0.5) translateY(-20px); }
   60%  { transform: rotate(-2deg) scale(1.08) translateY(4px); }
   80%  { transform: rotate(-4deg) scale(0.97); }
   100% { opacity: 1; transform: rotate(-3deg) scale(1); }
+}
+
+@keyframes curtain-left {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
 }
 
 /* ============================================================
@@ -134,7 +127,6 @@ a { text-decoration: none; color: inherit; }
   z-index: 0;
 }
 
-/* nav */
 .hero-nav {
   position: relative;
   z-index: 10;
@@ -155,12 +147,8 @@ a { text-decoration: none; color: inherit; }
   transition: color 0.2s, letter-spacing 0.3s;
 }
 
-.hero-nav a:hover {
-  color: #b8440a;
-  letter-spacing: 0.18em;
-}
+.hero-nav a:hover { color: #b8440a; letter-spacing: 0.18em; }
 
-/* título */
 .hero-title {
   position: absolute;
   top: 50%;
@@ -193,12 +181,10 @@ a { text-decoration: none; color: inherit; }
   animation-delay: 1s;
 }
 
-/* objetos da colagem */
 .obj {
   position: absolute;
   z-index: 5;
   filter: grayscale(100%) contrast(1.08);
-  /* hover: leve flutuação */
   transition: filter 0.3s, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
@@ -208,23 +194,11 @@ a { text-decoration: none; color: inherit; }
   z-index: 20;
 }
 
-.obj img {
-  display: block;
-  width: 100%;
-  object-fit: contain;
-}
+.obj img { display: block; width: 100%; object-fit: contain; }
 
-/* animações individuais dos objetos — lado esquerdo */
-.obj.left {
-  animation: toss-in-left 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
+.obj.left  { animation: toss-in-left  0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.obj.right { animation: toss-in-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
-/* lado direito */
-.obj.right {
-  animation: toss-in-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-/* sticker */
 .tape {
   position: absolute;
   z-index: 8;
@@ -243,11 +217,8 @@ a { text-decoration: none; color: inherit; }
   transition: transform 0.2s;
 }
 
-.tape:hover {
-  transform: rotate(-1deg) scale(1.05) !important;
-}
+.tape:hover { transform: rotate(-1deg) scale(1.05) !important; }
 
-/* CTA scroll */
 .hero-cta {
   position: absolute;
   bottom: 36px;
@@ -291,18 +262,14 @@ a { text-decoration: none; color: inherit; }
 }
 
 .masthead-date { color: #6b6055; }
-
-.masthead-nav { display: flex; gap: 24px; }
+.masthead-nav  { display: flex; gap: 24px; }
 
 .masthead-nav a {
   color: #6b6055;
   transition: color 0.2s, letter-spacing 0.3s;
 }
 
-.masthead-nav a:hover {
-  color: var(--accent-light);
-  letter-spacing: 0.12em;
-}
+.masthead-nav a:hover { color: var(--accent-light); letter-spacing: 0.12em; }
 
 .masthead-title {
   display: flex;
@@ -317,7 +284,6 @@ a { text-decoration: none; color: inherit; }
   background: linear-gradient(to right, transparent, #4a4035, transparent);
 }
 
-/* regras animam quando o masthead entra na viewport (via JS) */
 .masthead-rule.animate {
   animation: line-grow 0.8s cubic-bezier(0.77, 0, 0.18, 1) both;
 }
@@ -330,10 +296,6 @@ a { text-decoration: none; color: inherit; }
   color: var(--paper);
   white-space: nowrap;
   line-height: 1;
-}
-
-/* underline animado no hover do título */
-.masthead h1 {
   position: relative;
   display: inline-block;
 }
@@ -341,10 +303,8 @@ a { text-decoration: none; color: inherit; }
 .masthead h1::after {
   content: "";
   position: absolute;
-  bottom: -4px;
-  left: 0;
-  width: 0;
-  height: 1px;
+  bottom: -4px; left: 0;
+  width: 0; height: 1px;
   background: var(--accent-light);
   transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -359,7 +319,7 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ============================================================
-   CONTAINER
+   CONTAINER / GRID
    ============================================================ */
 
 .container {
@@ -377,10 +337,7 @@ a { text-decoration: none; color: inherit; }
 
 .section-divider::before,
 .section-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #2a2520;
+  content: ""; flex: 1; height: 1px; background: #2a2520;
 }
 
 .section-divider span {
@@ -395,7 +352,6 @@ a { text-decoration: none; color: inherit; }
    CARDS
    ============================================================ */
 
-/* estado inicial — invisível até scroll trigger (JS adiciona .visible) */
 .card {
   display: block;
   background: var(--paper);
@@ -412,31 +368,22 @@ a { text-decoration: none; color: inherit; }
     box-shadow 0.3s ease;
 }
 
-.card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
+.card.visible { opacity: 1; transform: translateY(0); }
 
-/* rotações nos grid cards — restauradas depois de .visible */
 .grid-card:nth-child(odd).visible  { transform: translateY(0) rotate(-0.6deg); }
 .grid-card:nth-child(even).visible { transform: translateY(0) rotate(0.6deg); }
 
 .card::after {
   content: "";
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
   opacity: 0.18;
   pointer-events: none;
   border-radius: var(--radius);
 }
 
-.card:hover {
-  transform: translateY(-4px) !important;
-  box-shadow: var(--shadow-hover);
-}
+.card:hover { transform: translateY(-4px) !important; box-shadow: var(--shadow-hover); }
 
-/* ── linha de progresso no topo do card no hover ── */
 .card::before {
   content: "";
   position: absolute;
@@ -449,12 +396,7 @@ a { text-decoration: none; color: inherit; }
 
 .card:hover::before { width: 100%; }
 
-.card-meta {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
+.card-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
 
 .tag-pill {
   font-size: 10px;
@@ -468,23 +410,11 @@ a { text-decoration: none; color: inherit; }
   transition: background 0.2s, color 0.2s;
 }
 
-.tag-pill:hover {
-  background: var(--accent);
-  color: #fff;
-}
+.tag-pill:hover { background: var(--accent); color: #fff; }
 
-.card-date {
-  font-size: 11px;
-  color: var(--ink-muted);
-  letter-spacing: 0.04em;
-}
+.card-date { font-size: 11px; color: var(--ink-muted); letter-spacing: 0.04em; }
 
-.card-excerpt {
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--ink-soft);
-  margin-top: 8px;
-}
+.card-excerpt { font-size: 14px; line-height: 1.55; color: var(--ink-soft); margin-top: 8px; }
 
 .card-byline {
   display: flex;
@@ -500,7 +430,7 @@ a { text-decoration: none; color: inherit; }
   font-weight: 500;
   color: var(--accent);
   letter-spacing: 0.04em;
-  transition: letter-spacing 0.25s, gap 0.2s;
+  transition: letter-spacing 0.25s;
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -508,9 +438,7 @@ a { text-decoration: none; color: inherit; }
 
 .card:hover .read-more { letter-spacing: 0.1em; }
 
-/* ============================================================
-   FEATURED
-   ============================================================ */
+/* featured */
 
 .featured-section { margin-bottom: 0; }
 
@@ -518,31 +446,22 @@ a { text-decoration: none; color: inherit; }
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 380px;
-  --card-r: -0.3deg;
 }
 
 .featured.visible { transform: translateY(0) rotate(-0.3deg); }
 
-.featured-image-wrap {
-  position: relative;
-  overflow: hidden;
-}
+.featured-image-wrap { position: relative; overflow: hidden; }
 
 .featured-image-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  width: 100%; height: 100%; object-fit: cover; display: block;
   transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .featured:hover .featured-image-wrap img { transform: scale(1.04); }
 
-/* curtain reveal na imagem do featured */
 .featured-image-wrap::after {
   content: "";
-  position: absolute;
-  inset: 0;
+  position: absolute; inset: 0;
   background: var(--paper-warm);
   transform-origin: left;
   transform: scaleX(1);
@@ -555,8 +474,7 @@ a { text-decoration: none; color: inherit; }
 
 .featured-label {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 16px; left: 16px;
   background: var(--accent);
   color: #fff;
   font-size: 10px;
@@ -586,20 +504,11 @@ a { text-decoration: none; color: inherit; }
 
 .featured .card-excerpt { font-size: 15px; line-height: 1.6; }
 
-/* ============================================================
-   GRID CARDS
-   ============================================================ */
+/* grid */
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-}
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
 
-.grid-card { display: flex; flex-direction: column; }
-
-/* delay escalonado — JS define --delay em cada card */
-.grid-card { transition-delay: var(--delay, 0ms); }
+.grid-card { display: flex; flex-direction: column; transition-delay: var(--delay, 0ms); }
 
 .grid-card-image { overflow: hidden; height: 180px; flex-shrink: 0; }
 
@@ -610,13 +519,7 @@ a { text-decoration: none; color: inherit; }
 
 .grid-card:hover .grid-card-image img { transform: scale(1.06); }
 
-.grid-card-body {
-  padding: 22px 22px 20px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
+.grid-card-body { padding: 22px 22px 20px; flex: 1; display: flex; flex-direction: column; }
 .grid-card-body.no-image { padding-top: 28px; }
 
 .grid-card h3 {
@@ -626,7 +529,6 @@ a { text-decoration: none; color: inherit; }
   line-height: 1.2;
   margin-bottom: 6px;
   color: var(--ink);
-  /* underline animado */
   background-image: linear-gradient(var(--accent), var(--accent));
   background-size: 0% 1px;
   background-repeat: no-repeat;
@@ -639,15 +541,9 @@ a { text-decoration: none; color: inherit; }
 
 .grid-card .card-date { margin-top: auto; padding-top: 14px; display: block; }
 
-/* ============================================================
-   FOOTER
-   ============================================================ */
+/* footer */
 
-.site-footer {
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 24px 40px;
-}
+.site-footer { max-width: var(--max-w); margin: 0 auto; padding: 0 24px 40px; }
 
 .footer-rule {
   height: 1px;
@@ -663,30 +559,38 @@ a { text-decoration: none; color: inherit; }
 }
 
 /* ============================================================
-   POST PAGE
+   POST PAGE — base
    ============================================================ */
 
-body.post-page { background: #f7f3ec; color: var(--ink); }
+body.post-page {
+  background: var(--post-bg);
+  color: var(--post-ink);
+}
 
-/* barra de progresso de leitura */
+/* barra de progresso */
 .reading-progress {
   position: fixed;
   top: 0; left: 0;
   height: 2px;
   width: 0%;
-  background: var(--accent);
+  background: var(--post-accent);
   z-index: 200;
   transition: width 0.1s linear;
 }
 
+/* header sticky */
 .post-site-header {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(247, 243, 236, 0.92);
+  background: var(--post-header-bg);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--paper-deep);
+  border-bottom: 1px solid var(--post-rule);
   padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.4s;
 }
 
 .back-link {
@@ -694,22 +598,43 @@ body.post-page { background: #f7f3ec; color: var(--ink); }
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: var(--post-accent);
   transition: letter-spacing 0.25s;
 }
 
 .back-link:hover { letter-spacing: 0.12em; }
 
+/* título do post que aparece no header ao scrollar */
+.post-header-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--post-ink-muted);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.3s, transform 0.3s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50vw;
+}
+
+.post-header-title.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* artigo */
 .post {
   max-width: var(--reading-w);
   margin: 0 auto;
   padding: 56px 24px 80px;
 }
 
-.post-hero { margin-bottom: 48px; }
-
-/* hero do post entra com rise */
-.post-hero { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: 0.1s; }
+.post-hero {
+  margin-bottom: 48px;
+  animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.1s;
+}
 
 .post-meta-top {
   display: flex;
@@ -720,60 +645,90 @@ body.post-page { background: #f7f3ec; color: var(--ink); }
 
 .post-meta-top .card-meta { margin-bottom: 0; }
 
-body.post-page .tag-pill { color: var(--accent); border-color: var(--accent); }
-body.post-page .card-date { color: var(--ink-muted); }
+body.post-page .tag-pill {
+  color: var(--post-accent);
+  border-color: var(--post-accent);
+}
+
+body.post-page .tag-pill:hover {
+  background: var(--post-accent);
+  color: #fff;
+}
+
+body.post-page .card-date { color: var(--post-ink-muted); }
 
 #post-title {
   font-family: var(--font-display);
-  font-size: clamp(32px, 6vw, 52px);
+  font-size: clamp(32px, 6vw, 56px);
   font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: var(--ink);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--post-ink);
   margin-bottom: 18px;
 }
 
 .post-subtitle {
-  font-size: 18px;
+  font-size: 19px;
   line-height: 1.55;
-  color: var(--ink-soft);
+  color: var(--post-ink-soft);
   font-style: italic;
   font-family: var(--font-display);
-  margin-bottom: 32px;
+  margin-bottom: 36px;
+}
+
+/* imagem do post com curtain reveal */
+.post-image-wrap {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.post-image-wrap::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--post-bg);
+  transform-origin: right;
+  animation: curtain-left 0.9s 0.4s cubic-bezier(0.77, 0, 0.18, 1) both;
 }
 
 #post-image {
   width: 100%;
-  max-height: 440px;
+  max-height: 480px;
   object-fit: cover;
-  border-radius: var(--radius);
   display: block;
-  /* curtain reveal */
-  animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: 0.35s;
 }
 
 #post-image[src=""] { display: none; }
+#post-image[src=""] + .post-image-wrap::after,
+.post-image-wrap:has(#post-image[src=""]) { display: none; }
 
-/* conteúdo */
-.content { color: var(--ink); }
+/* ============================================================
+   CONTEÚDO DO POST
+   ============================================================ */
+
+.content { color: var(--post-ink); }
 
 .content > p:first-of-type::first-letter {
   font-family: var(--font-display);
-  font-size: 4.5rem;
+  font-size: 5rem;
   font-weight: 600;
   float: left;
-  line-height: 0.78;
-  margin-right: 10px;
-  margin-top: 6px;
-  color: var(--accent);
+  line-height: 0.75;
+  margin-right: 12px;
+  margin-top: 8px;
+  color: var(--post-drop-cap);
 }
 
-.content p { font-size: 17px; line-height: 1.85; margin: 0 0 1.6em; color: #2a2520; }
+.content p {
+  font-size: 17.5px;
+  line-height: 1.9;
+  margin: 0 0 1.6em;
+  color: var(--post-ink-soft);
+}
 
 .content h2, .content h3, .content h4 {
   font-family: var(--font-display);
-  color: var(--ink);
+  color: var(--post-ink);
   margin: 2.4em 0 0.6em;
   line-height: 1.2;
 }
@@ -786,50 +741,57 @@ body.post-page .card-date { color: var(--ink-muted); }
   content: "";
   display: block;
   height: 1px;
-  background: linear-gradient(to right, var(--accent), transparent);
+  background: linear-gradient(to right, var(--post-accent), transparent);
   width: 60px;
   margin-bottom: 18px;
 }
 
 .content blockquote {
-  border-left: 3px solid var(--accent);
-  margin: 2em 0;
+  border-left: 3px solid var(--post-accent);
+  margin: 2.4em 0;
   padding: 4px 0 4px 28px;
-  color: var(--ink-soft);
+  color: var(--post-ink-soft);
   font-family: var(--font-display);
-  font-size: 20px;
+  font-size: 21px;
   font-style: italic;
   line-height: 1.6;
 }
 
-.content blockquote p { font-size: 20px; margin: 0; }
+.content blockquote p { font-size: 21px; margin: 0; color: var(--post-ink-soft); }
 
 .content ul, .content ol { margin: 1.2em 0 1.6em 1.5em; }
 
-.content li { font-size: 16px; line-height: 1.7; margin-bottom: 0.5em; color: #2a2520; }
-.content li::marker { color: var(--accent); }
+.content li { font-size: 16.5px; line-height: 1.75; margin-bottom: 0.5em; color: var(--post-ink-soft); }
+.content li::marker { color: var(--post-accent); }
 
 .content a {
-  color: var(--accent);
+  color: var(--post-accent);
   text-decoration: underline;
   text-underline-offset: 3px;
   text-decoration-thickness: 1px;
+  transition: color 0.2s;
 }
 
-.content a:hover { color: var(--accent-light); }
+.content a:hover { color: var(--post-accent-l); }
 
-.content hr { border: none; border-top: 1px solid var(--paper-deep); margin: 3em auto; width: 60%; }
+.content hr {
+  border: none;
+  border-top: 1px solid var(--post-rule);
+  margin: 3em auto;
+  width: 60%;
+}
+
 .content img { width: 100%; border-radius: var(--radius); margin: 2em 0; }
-.content strong { font-weight: 500; color: var(--ink); }
+.content strong { font-weight: 500; color: var(--post-ink); }
 .content em { font-style: italic; }
 
 .content code {
   font-family: "SF Mono", "Fira Code", monospace;
   font-size: 0.85em;
-  background: var(--paper-deep);
+  background: var(--post-rule);
   padding: 2px 6px;
   border-radius: 2px;
-  color: var(--accent);
+  color: var(--post-accent);
 }
 
 .content pre {
@@ -843,18 +805,156 @@ body.post-page .card-date { color: var(--ink-muted); }
 .content pre code { background: none; padding: 0; color: #d4cfc8; font-size: 14px; line-height: 1.7; }
 
 .post-footer { margin-top: 64px; }
-.post-footer .footer-rule { height: 1px; background: var(--paper-deep); margin-bottom: 20px; }
+
+.post-footer .footer-rule {
+  height: 1px;
+  background: var(--post-rule);
+  margin-bottom: 20px;
+}
 
 .back-home {
   font-size: 13px;
   font-weight: 500;
   letter-spacing: 0.05em;
-  color: var(--accent);
+  color: var(--post-accent);
   text-transform: uppercase;
   transition: letter-spacing 0.25s;
 }
 
 .back-home:hover { letter-spacing: 0.09em; }
+
+/* ============================================================
+   TEMAS DE POST
+   Cada post pode declarar theme: dark | sepia | stark | default
+   no seu frontmatter .md — o JS aplica data-theme no <body>
+   ============================================================ */
+
+/* ── DARK ─────────────────────────────────────────────────────
+   Clima: thriller, tecnologia, noite, urgência
+   Exemplo de uso: posts sobre redes sociais, hacking, distopia
+─────────────────────────────────────────────────────────────── */
+body.post-page[data-theme="dark"] {
+  --post-bg:        #0f0e0c;
+  --post-ink:       #e8e2d8;
+  --post-ink-soft:  #b0a898;
+  --post-ink-muted: #6b6055;
+  --post-accent:    #c47a3a;
+  --post-accent-l:  #e8a870;
+  --post-rule:      #2a2520;
+  --post-header-bg: rgba(15,14,12,0.94);
+  --post-drop-cap:  #c47a3a;
+}
+
+body.post-page[data-theme="dark"] .post-image-wrap::after {
+  background: #0f0e0c;
+}
+
+body.post-page[data-theme="dark"] #post-title {
+  font-size: clamp(36px, 7vw, 64px);
+  letter-spacing: -0.03em;
+}
+
+/* ── SEPIA ────────────────────────────────────────────────────
+   Clima: nostalgia, memória, cultura, anos 80/90
+   Exemplo de uso: coisas antigas, cinema clássico, retro
+─────────────────────────────────────────────────────────────── */
+body.post-page[data-theme="sepia"] {
+  --post-bg:        #f0e8d5;
+  --post-ink:       #2a1f0e;
+  --post-ink-soft:  #4a3520;
+  --post-ink-muted: #8a7055;
+  --post-accent:    #8b3a0f;
+  --post-accent-l:  #c47840;
+  --post-rule:      #d4c4a8;
+  --post-header-bg: rgba(240,232,213,0.94);
+  --post-drop-cap:  #8b3a0f;
+}
+
+body.post-page[data-theme="sepia"] .post-image-wrap::after {
+  background: #f0e8d5;
+}
+
+body.post-page[data-theme="sepia"] body {
+  background-image: url("https://www.transparenttextures.com/patterns/aged-paper.png");
+}
+
+body.post-page[data-theme="sepia"] #post-title {
+  font-style: italic;
+}
+
+/* ── STARK ────────────────────────────────────────────────────
+   Clima: editorial agressivo, cinema, arte, ensaio crítico
+   Exemplo de uso: análises de filme, crítica cultural
+─────────────────────────────────────────────────────────────── */
+body.post-page[data-theme="stark"] {
+  --post-bg:        #ffffff;
+  --post-ink:       #0a0a0a;
+  --post-ink-soft:  #1a1a1a;
+  --post-ink-muted: #666666;
+  --post-accent:    #c0392b;
+  --post-accent-l:  #e74c3c;
+  --post-rule:      #e0e0e0;
+  --post-header-bg: rgba(255,255,255,0.95);
+  --post-drop-cap:  #c0392b;
+}
+
+body.post-page[data-theme="stark"] .post-image-wrap::after {
+  background: #ffffff;
+}
+
+body.post-page[data-theme="stark"] #post-title {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 0.96;
+}
+
+body.post-page[data-theme="stark"] .post-subtitle {
+  font-style: normal;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-family: var(--font-body);
+  color: var(--post-ink-muted);
+}
+
+body.post-page[data-theme="stark"] .content p {
+  font-size: 18px;
+  line-height: 1.75;
+}
+
+body.post-page[data-theme="stark"] .content blockquote {
+  font-size: 26px;
+  border-left-width: 4px;
+  padding-left: 24px;
+  margin: 2em -24px;
+}
+
+/* ── VERDE / PSICOLOGIA ───────────────────────────────────────
+   Clima: calmo, profundo, introspectivo
+   Exemplo de uso: psicologia, comportamento, mente
+─────────────────────────────────────────────────────────────── */
+body.post-page[data-theme="mind"] {
+  --post-bg:        #f2f4f0;
+  --post-ink:       #1c2218;
+  --post-ink-soft:  #3a4232;
+  --post-ink-muted: #7a8870;
+  --post-accent:    #3d6b45;
+  --post-accent-l:  #6a9e72;
+  --post-rule:      #d8ddd4;
+  --post-header-bg: rgba(242,244,240,0.94);
+  --post-drop-cap:  #3d6b45;
+}
+
+body.post-page[data-theme="mind"] .post-image-wrap::after {
+  background: #f2f4f0;
+}
+
+body.post-page[data-theme="mind"] #post-title {
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(36px, 6vw, 60px);
+}
 
 /* ============================================================
    RESPONSIVE
@@ -877,9 +977,10 @@ body.post-page .card-date { color: var(--ink-muted); }
 
   .post { padding: 32px 20px 60px; }
   .content > p:first-of-type::first-letter { font-size: 3.5rem; }
+
+  body.post-page[data-theme="stark"] .content blockquote { margin: 2em 0; }
 }
 
-/* respeita preferência de movimento reduzido */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
