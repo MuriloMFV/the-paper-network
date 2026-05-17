@@ -541,21 +541,126 @@ a { text-decoration: none; color: inherit; }
 
 .grid-card .card-date { margin-top: auto; padding-top: 14px; display: block; }
 
-/* footer */
 
-.site-footer { max-width: var(--max-w); margin: 0 auto; padding: 0 24px 40px; }
-
-.footer-rule {
-  height: 1px;
-  background: linear-gradient(to right, transparent, #2a2520, transparent);
-  margin-bottom: 20px;
+.kb-footer {
+  background: var(--bg);
+  padding: 56px 40px 48px;
 }
 
-.site-footer p {
-  text-align: center;
-  font-size: 12px;
+.kb-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  max-width: 900px;
+  margin: 0 auto 48px;
+}
+
+.kb-brand {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--paper);
+  letter-spacing: -0.01em;
+}
+
+.kb-tagline {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: #4a4035;
+  margin-top: 6px;
+}
+
+.kb-links {
+  display: flex;
+  gap: 24px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.kb-links a {
+  color: #4a4035;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.kb-links a:hover { color: var(--accent-light); }
+
+/* fileira de teclas */
+.kb-keyboard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: 900px;
+  margin: 0 auto;
+  flex-wrap: nowrap;
+}
+
+/* cada tecla */
+.kb-key {
+  position: relative;
+  flex-shrink: 0;
+  cursor: default;
+  transition: transform 0.08s ease, filter 0.15s ease;
+  /* efeito de tecla pressionada no hover */
+  transform-origin: bottom center;
+}
+
+.kb-key img {
+  display: block;
+  width: 72px;       /* ajuste conforme o tamanho real das suas imagens */
+  height: 72px;
+  object-fit: contain;
+  filter: grayscale(30%) brightness(0.85);
+  transition: filter 0.15s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* hover: afunda como tecla real sendo pressionada */
+.kb-key:hover {
+  transform: translateY(3px) scale(0.96);
+}
+
+.kb-key:hover img {
+  filter: grayscale(0%) brightness(1.1);
+}
+
+/* clique: pressiona mais fundo */
+.kb-key:active {
+  transform: translateY(5px) scale(0.94);
+}
+
+.kb-key:active img {
+  filter: grayscale(0%) brightness(1.2);
+}
+
+/* gap entre palavras */
+.kb-gap {
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* copyright */
+.kb-copy {
+  text-align: center;
+  font-size: 11px;
+  color: #2a2520;
   letter-spacing: 0.06em;
+  margin-top: 40px;
+}
+
+/* responsivo */
+@media (max-width: 768px) {
+  .kb-footer { padding: 40px 20px 36px; }
+  .kb-top { flex-direction: column; gap: 20px; align-items: flex-start; }
+
+  .kb-keyboard { gap: 5px; flex-wrap: wrap; justify-content: center; }
+
+  .kb-key img { width: 48px; height: 48px; }
+  .kb-gap { width: 20px; }
 }
 
 /* ============================================================
@@ -988,3 +1093,4 @@ body.post-page[data-theme="mind"] #post-title {
   }
   .card { opacity: 1; transform: none !important; }
 }
+

@@ -4,7 +4,7 @@ date: 24 Abril 2024
 description: David Fincher não fez um filme sobre tecnologia. Fez um filme sobre o que a tecnologia revela nas pessoas.
 image: assets/images/thesocialnetwork.jpg
 tags: Cinema, Tecnologia
-theme: stark
+theme: dark
 ---
 
 A maioria das pessoas que entra na programação imagina que lançar uma tecnologia é sobre código.
